@@ -6,8 +6,8 @@ is the template submission script to submit 200 zlevels and N times
 (N=12 currently), over the requesite number of jobs.
 Each job runs on 48 cores, and issues 48 python commands
 
-#submit_all_levels 
-will create the PBS submission scripts for each job
+# submit_all_levels 
+will create the PBS submission scripts for each job, based on the template qsub_multi
 
 # sub_one_level.py
 Each job calls multiple instances of the core filtering script sub_one_level.py
