@@ -1,0 +1,20 @@
+#!/bin/bash
+
+dz=12
+zimax=200
+
+
+for zi1 in $(seq 0 $dz 200)
+do
+zi2=$[zi1+$dz-1]	
+if [ $zi2 -gt $zimax ]
+then
+zi2=$zimax
+fi
+
+sed -e "s/zi1=0;zi2=11/zi1=$zi1;zi2=$zi2/g" <qsub_multi >qsub_$zi1
+
+qsub qsub_$zi1
+
+
+done

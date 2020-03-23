@@ -1,0 +1,46 @@
+#!/bin/bash
+#PBS -q normal
+#PBS -P v45
+#PBS -l walltime=24:00:00,mem=192GB
+#PBS -l ncpus=48
+#PBS -l wd
+#PBS -l storage=gdata/hh5+gdata/nm03
+
+source /g/data/hh5/public/apps/miniconda3/etc/profile.d/conda.sh
+
+conda activate filtering
+
+# num cpus
+n=48
+# maximum time in hrs (8 days - centre )
+tmax=191
+# which zlevel
+zi1=0;zi2=11;
+# number of time loops
+jmax=$[ $tmax/$n + 1 ]
+
+
+for zi in $(seq $zi1 $zi2)
+do	
+for j in $(seq 0 $jmax)
+do
+	nstart=$[$n*$j]
+	nend=$[$nstart+$n-1]
+
+	if [ $nend -gt $tmax ]
+	then
+		nend=$tmax
+	fi
+
+	for i in $(seq $nstart $nend)
+	do
+		python3 sub_one_level.py $zi $i &
+	done
+
+	# wait for the first 48 jobs to finish
+	wait
+
+done
+done
+
+

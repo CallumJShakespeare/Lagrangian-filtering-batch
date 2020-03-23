@@ -1,0 +1,33 @@
+#!/bin/bash
+# bash script to concatenate single z,t outs
+module load nco
+tmax=191;
+
+# compress and concatenate; loop in t
+for i in $(seq 0 $tmax);
+
+do f1=$( printf 'out_z*_t%03i' $i )
+
+#save as
+f2=$( printf 'out_t%03i' $i )
+# take all z at one t and concatenate
+# compress to Deflate Level 5
+# chunk sensibly 50*50 in X,Y
+# ncrcat -L 5 $f1*.nc $f1.nc
+ncecat -L 5 --cnk_dmn X,50 --cnk_dmn Y,50 $f1*.nc $f2.nc
+
+ncrename -d record,level $f2.nc
+
+# Revert to time as record dimension + overwrite
+ncpdq -a T,level -O $f2.nc $f2.nc
+
+# remove source files
+#rm $f1*
+
+done
+
+# now concat all t
+ncrcat out_t*.nc wave.nc
+
+# delete source files
+#rm out*.nc
