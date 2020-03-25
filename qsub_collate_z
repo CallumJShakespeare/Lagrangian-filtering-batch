@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -q normal
+#PBS -P v45
+#PBS -l walltime=10:00:00,mem=4GB
+#PBS -l ncpus=1
+#PBS -l wd
+#PBS -l storage=gdata/hh5+gdata/nm03
+
+module load nco
+
+ncrcat out_tt*.nc wave.nc
+
+# delete source files
+#rm out*.nc

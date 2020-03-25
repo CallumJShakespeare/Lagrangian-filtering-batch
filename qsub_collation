@@ -6,35 +6,29 @@
 #PBS -l wd
 #PBS -l storage=gdata/hh5+gdata/nm03
 
-source /g/data/hh5/public/apps/miniconda3/etc/profile.d/conda.sh
-
-conda activate filtering
+module load nco
 
 # num cpus
 n=48
 # maximum time in hrs (8 days - centre )
-tmax=191
-# which zlevel
-zi1=0;zi2=11;
-# number of time loops
-jmax=$[ $tmax/$n + 1 ]
+zmax=191
+# number of z loops
+jmax=$[ $zmax/$n + 1 ]
 
-
-for zi in $(seq $zi1 $zi2)
-do
+# run 48 collation jobs in parallel
 for j in $(seq 0 $jmax)
 do
 	nstart=$[$n*$j]
 	nend=$[$nstart+$n-1]
 
-	if [ $nend -gt $tmax ]
+	if [ $nend -gt $zmax ]
 	then
 		nend=$tmax
 	fi
 
 	for i in $(seq $nstart $nend)
 	do
-		python3 sub_one_level.py $zi $i &
+		./concat_one_time $i &
 	done
 
 	# wait for the first 48 jobs to finish
@@ -42,6 +36,5 @@ do
 
 done
 
-#./concat_one_time &
-
-done
+# issue single core collation of z levels
+qsub qsub_collate_z

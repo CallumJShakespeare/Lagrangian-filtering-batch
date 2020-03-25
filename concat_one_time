@@ -1,0 +1,14 @@
+#!/bin/bash
+
+module load nco
+
+# concatenate times
+f1=$( printf 'out_z*_t%03i' $1 )
+f2=$( printf 'out_tt%03i' $1 )
+# take all z at one t and concatenate
+ncecat -L 5 --cnk_dmn X,50 --cnk_dmn Y,50 $f1*.nc $f2.nc
+ncrename -d record,level $f2.nc
+# Revert to time as record dimension + overwrite
+ncpdq -a T,level -O $f2.nc $f2.nc
+# remove source files
+#rm $f1*

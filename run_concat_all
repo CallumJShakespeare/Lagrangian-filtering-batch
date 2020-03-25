@@ -1,4 +1,5 @@
 #!/bin/bash
+# takes 7 mins per output; consider parallelising?
 # bash script to concatenate single z,t outs
 module load nco
 tmax=191;
