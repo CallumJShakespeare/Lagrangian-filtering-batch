@@ -12,5 +12,13 @@ will create the PBS submission scripts for each job, based on the template qsub_
 # sub_one_level.py
 Each job calls multiple instances of the core filtering script sub_one_level.py
 
-# run_concat_all
+# qsub_collation
+parallel collation script which collates in z for each time (x,y) -> (x,y,z)
+Once complete issues qsub qsub_collate_z command to collate all times
+
+# qsub_collate_z
+Collates (x,y,z) -> (x,y,z,t) files - output "wave.nc" single file
+Slowest part of the process.
+
+# run_concat_all (serial collation - do not recommend)
 At the end of the filtering,  all output can be collate with run_concat_all
